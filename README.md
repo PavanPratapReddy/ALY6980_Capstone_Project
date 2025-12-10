@@ -1,198 +1,109 @@
-# 🚀 NEST 
 
-A production-ready framework for deploying and managing specialized AI agents with seamless agent-to-agent communication and intelligent discovery.
+# Capstone — Modular Multi-Agent Framework
 
-## ✨ Key Features
+A research-oriented multi-agent framework and examples focused on modular embeddings, discovery, and domain-specific agents. This repository contains a lightweight agent runtime, example domain agents, embedding adapters, telemetry hooks, and example scripts to run and experiment locally.
 
-- **🤖 Intelligent Agents**: Deploy specialized AI agents powered by Claude LLM
-- **🔗 A2A Communication**: Agents can find and communicate with each other using `@agent-id` syntax  
-- **🌐 Cloud Deployment**: One-command deployment to AWS EC2 with automatic setup
-- **📊 Registry Integration**: Automatic registration with NANDA agent registry
-- **⚡ Scalable**: Deploy single agents or 10+ agents per instance
-- **🛡️ Production Ready**: Robust error handling, health checks, and monitoring
+## Highlights
 
-## 🚀 Quick Start
+- Modular adapter architecture for embedding providers and agent discovery.
+- Example domain agents (financial, healthcare, web development, reporting).
+- Tools and scripts for local deployment, testing, and agent evaluation.
+- Telemetry and metrics collection components (MongoDB integrations present).
 
-### Deploy a Single Agent
+## Quick start
 
-```bash
-bash scripts/aws-single-agent-deployment.sh \
-  "agent-id" \                    # Unique identifier
-  "your-api-key" \                # Anthropic Claude API key
-  "Agent Name" \                  # Display name
-  "domain" \                      # Field of expertise
-  "specialization" \              # Role description
-  "description" \                 # Detailed agent description
-  "capabilities" \                # Comma-separated capabilities
-  "registry-url" \                # Registry URL 
-  "port" \                        # Port number 
-  "region" \                      # AWS region 
-  "instance-type"                 # EC2 instance type 
-```
-
-**Example:**
-```bash
-bash scripts/aws-single-agent-deployment.sh \
-  "furniture-expert" \
-  "sk-ant-api03-..." \
-  "Furniture Expert" \
-  "furniture and interior design" \
-  "knowledgeable furniture specialist" \
-  "I help with furniture selection and interior design" \
-  "furniture,interior design,decor" \
-  "http://registry.chat39.com:6900" \
-  "6000" \
-  "us-east-1" \
-  "t3.micro"
-```
-
-### Deploy Multiple Agents (10 per instance)
+1. Create a Python virtual environment and activate it.
 
 ```bash
-bash scripts/aws-multi-agent-deployment.sh \
-  "your-api-key" \
-  "scripts/agent_configs/group-01-business-and-finance-experts.json" \
-  "http://registry.chat39.com:6900" \
-  "us-east-1" \
-  "t3.xlarge"
+# macOS / zsh
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-## 🏗️ Architecture
-
-```
-streamlined_adapter/
-├── 🧠 nanda_core/              # Core framework
-│   ├── core/
-│   │   ├── adapter.py          # Main NANDA adapter
-│   │   ├── agent_bridge.py     # A2A communication
-│   │   └── registry_client.py  # Registry integration
-│   ├── discovery/              # Agent discovery system
-│   └── telemetry/              # Monitoring & metrics
-├── 🤖 examples/
-│   ├── nanda_agent.py          # Main agent implementation
-│   └── agent_configs.py        # Agent personalities
-├── 🚀 scripts/
-│   ├── aws-single-agent-deployment.sh     # Single agent deployment
-│   ├── aws-multi-agent-deployment.sh      # Multi-agent deployment
-│   ├── deploy-agent.sh                    # Deploy to existing server
-│   └── agent_configs/              # Agent configuration files
-│       ├── 100-agents-config.json      # 100 agent personalities
-│       └── group-*.json                # Agent group configs
-└── 📖 README.md
-```
-
-## 🤖 Agent Communication
-
-Agents can communicate with each other using the `@agent-id` syntax:
+2. Install project dependencies.
 
 ```bash
-# Test A2A communication
-curl -X POST http://agent-ip:{PORT}/a2a \
-  -H "Content-Type: application/json" \
-  -d '{
-    "content": {
-      "text": "@other-agent-id Can you help with this task?",
-      "type": "text"
-    },
-    "role": "user",
-    "conversation_id": "test123"
-  }'
+pip install -r streamlined-adapter/requirements.txt
 ```
 
-## 📋 Available Agent Groups
+3. Run the demo script (simple entry point):
 
-Pre-configured agent groups for quick deployment:
-
-- **Business & Finance**: Financial analysts, investment advisors, business strategists
-- **Technology & Engineering**: Software engineers, DevOps specialists, AI researchers  
-- **Creative & Design**: Graphic designers, content creators, brand strategists
-- **Healthcare & Life Sciences**: Medical researchers, health informatics specialists
-- **Education & Research**: Academic researchers, curriculum developers
-- **Media & Entertainment**: Journalists, content producers, social media managers
-- **Environmental & Sustainability**: Climate scientists, sustainability consultants
-- **Social Services**: Community organizers, social workers, policy analysts
-- **Sports & Recreation**: Fitness trainers, sports analysts, nutrition experts
-- **Travel & Hospitality**: Travel planners, hotel managers, tour guides
-
-## 🛠️ Prerequisites
-
-- AWS CLI configured with credentials
-- Anthropic API key
-- Python 3.8+ (for local development)
-
-## 📊 Monitoring
-
-Each deployed agent includes:
-- **Health checks** on startup
-- **Automatic registry registration**
-- **Process management** with supervisor
-- **Individual logs** for debugging
-- **Performance metrics** collection
-
-## 🔧 Configuration
-
-### Environment Variables
-
-- `ANTHROPIC_API_KEY`: Your Claude API key
-- `AGENT_ID`: Unique agent identifier  
-- `AGENT_NAME`: Display name for the agent
-- `REGISTRY_URL`: NANDA registry endpoint
-- `PUBLIC_URL`: Agent's public URL for A2A communication
-- `PORT`: Port number for the agent server
-
-### Agent Personality Configuration
-
-Agents are configured with:
-- **Domain**: Primary area of expertise
-- **Specialization**: Specific role and personality
-- **Description**: Detailed background for system prompt
-- **Capabilities**: List of specific skills and knowledge areas
-
-## 🧪 Testing
-
-### Test Single Agent
 ```bash
-curl -X POST http://agent-ip:{PORT}/a2a \
-  -H "Content-Type: application/json" \
-  -d '{"content":{"text":"Hello! What can you help me with?","type":"text"},"role":"user","conversation_id":"test123"}'
+python demo.py
 ```
 
-### Test A2A Communication
+4. If you want to run the enhanced local agent tests or examples, try:
+
 ```bash
-curl -X POST http://agent-a-ip:{PORT}/a2a \
-  -H "Content-Type: application/json" \
-  -d '{"content":{"text":"@agent-b-id Please help with this task","type":"text"},"role":"user","conversation_id":"test123"}'
+python streamlined-adapter/test_complete_system_local.py
+python streamlined-adapter/test_agent.py
 ```
 
-## 🚀 Production Deployment
+Note: some example scripts expect local services (e.g., MongoDB) or API keys for embedding providers. Check the related modules under `streamlined-adapter/nanda_core` and `streamlined-adapter/embeddings` for specific config hints.
 
-For production use:
+## Project layout (key files and folders)
 
-1. **Single Agent**: Use `t3.micro` for cost-effective single agent deployment
-2. **Multi-Agent**: Use `t3.xlarge` or larger for 10+ agents per instance  
-3. **High Availability**: Deploy across multiple AWS regions
-4. **Monitoring**: Enable CloudWatch logs and metrics
-5. **Security**: Use proper security groups and VPC configuration
+- `demo.py` — Lightweight demo driver for quick experiments.
+- `deploy-*.sh` — Helper scripts for deployment targets (AWS / Linode examples).
+- `streamlined-adapter/` — Main Python package containing adapters, agents, examples, and tests:
+	- `examples/` — Example agent configs and domain agents.
+	- `nanda_core/` — Core runtime: adapters, agent bridge, discovery, telemetry, embeddings.
+	- `embeddings/` — Embedding provider implementations and managers.
+	- `scripts/` — Additional helper scripts and example agent configs.
+	- `test_*.py` — Unit/integration tests and examples used for validation.
 
-## 📝 License
+## Configuration
 
-MIT License - see LICENSE file for details.
+- Many components read configuration from JSON files under `streamlined-adapter/` and the `scripts/agent_configs` folder. Example config files include:
+	- `streamlined-adapter/embedding_config.json`
+	- `streamlined-adapter/streamlined-adapter/embedding_config.json` (if present)
+	- `streamlined-adapter/scripts/*.json`
 
-## 🤝 Contributing
+- If you use MongoDB for telemetry or agent facts, set the connection URL in the modules that reference `mongodb` or set environment variables expected by those modules.
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+## Running tests
 
-## 📞 Support
+Run tests from the project root using `pytest`. Example:
 
-For issues and questions:
-- Create an issue in this repository
-- Check the documentation in `/scripts/README.md`
-- Review example configurations in `/scripts/`
+```bash
+pip install pytest
+pytest -q
+```
+
+Some tests under `streamlined-adapter/` exercise integration points and may require external services or API keys. Use selective test invocation to run unit-only tests.
+
+## Development notes
+
+- Code style and minimal refactoring: keep changes local to the package under `streamlined-adapter/`.
+- When adding new embedding providers, implement the base interface found in `streamlined-adapter/nanda_core/embeddings/base_embedder.py`.
+- Discovery and ranking logic lives in `streamlined-adapter/nanda_core/discovery`.
+
+## Examples and demo scripts
+
+- `demo.py` — Good first stop for seeing a minimal flow.
+- `streamlined-adapter/deploy_enhanced_local.py` — Local enhanced agent runner.
+- `streamlined-adapter/examples/` — Browse these for agent templates and usage patterns.
+
+## Contributing
+
+If you'd like to contribute:
+
+- Fork the repo and create a feature branch.
+- Keep changes small and focused; add tests for new features.
+- Open a PR and provide a short description and any required setup steps.
+
+## License & contact
+
+This repository does not include an explicit license file. If you intend to open-source it, add a `LICENSE` file (for example, MIT or Apache-2.0).
+
+For questions or help, open an issue or contact the repository owner.
 
 ---
 
-**Built with ❤️ for the NANDA Agent Network**
+If you want, I can also:
+
+- Add a short `requirements.txt` at the repo root that aggregates the ones in `streamlined-adapter/`.
+- Generate small runnable examples with environment variable placeholders and a `.env.example`.
+- Update or add a `LICENSE` file.
+Tell me which of the above you'd like next.
+
